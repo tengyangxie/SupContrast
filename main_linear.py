@@ -61,6 +61,9 @@ def parse_option():
     parser.add_argument('--ckpt', type=str, default='',
                         help='path to pre-trained model')
 
+    parser.add_argument('--small_train_ratio', type=float, default=0.1,
+                        help='how much of training data to use')
+
     opt = parser.parse_args()
 
     # set the path according to the environment
