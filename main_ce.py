@@ -172,7 +172,7 @@ def set_loader(opt):
     if opt.small_val_ratio > 0 and opt.small_val_ratio < 1:
         val_length = len(val_dataset)
         small_val_length = int(opt.small_train_ratio * val_length)
-        small_val_set, _ = torch.utils.data.random_split(train_dataset, [small_val_length, val_length - small_val_length])
+        small_val_set, _ = torch.utils.data.random_split(val_dataset, [small_val_length, val_length - small_val_length])
         val_loader = torch.utils.data.DataLoader(
             small_val_set, batch_size=256, shuffle=False,
             num_workers=8, pin_memory=True)
