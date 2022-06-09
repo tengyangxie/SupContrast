@@ -16,14 +16,6 @@ from util import adjust_learning_rate, warmup_learning_rate, accuracy
 from util import set_optimizer, save_model
 from networks.resnet_big import SupCEResNet
 
-import apex
-from apex import amp, optimizers
-
-# try:
-#     import apex
-#     from apex import amp, optimizers
-# except ImportError:
-#     pass
 
 
 def parse_option():
@@ -60,8 +52,6 @@ def parse_option():
     # other setting
     parser.add_argument('--cosine', action='store_true',
                         help='using cosine annealing')
-    parser.add_argument('--syncBN', action='store_true',
-                        help='using synchronized batch normalization')
     parser.add_argument('--warm', action='store_true',
                         help='warm-up for large batch training')
     parser.add_argument('--trial', type=str, default='0',
@@ -174,9 +164,9 @@ def set_model(opt):
     model = SupCEResNet(name=opt.model, num_classes=opt.n_cls)
     criterion = torch.nn.CrossEntropyLoss()
 
-    # enable synchronized Batch Normalization
-    if opt.syncBN:
-        model = apex.parallel.convert_syncbn_model(model)
+    # # enable synchronized Batch Normalization
+    # if opt.syncBN:
+    #     model = apex.parallel.convert_syncbn_model(model)
 
     if torch.cuda.is_available():
         if torch.cuda.device_count() > 1:
