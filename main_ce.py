@@ -59,6 +59,8 @@ def parse_option():
 
     parser.add_argument('--small_train_ratio', type=float, default=0.1,
                         help='how much of training data to use')
+    parser.add_argument('--small_val_ratio', type=float, default=0.1,
+                        help='how much of validation data to use')
 
     opt = parser.parse_args()
 
@@ -158,7 +160,6 @@ def set_loader(opt):
         train_length = len(train_dataset)
         small_train_length = int(opt.small_train_ratio * train_length)
         small_train_set, _ = torch.utils.data.random_split(train_dataset, [small_train_length, train_length - small_train_length])
-
         train_loader = torch.utils.data.DataLoader(
             small_train_set, batch_size=opt.batch_size, shuffle=(train_sampler is None),
             num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
@@ -168,9 +169,17 @@ def set_loader(opt):
             num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
 
 
-    val_loader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=256, shuffle=False,
-        num_workers=8, pin_memory=True)
+    if opt.small_val_ratio > 0 and opt.small_val_ratio < 1:
+        val_length = len(val_dataset)
+        small_val_length = int(opt.small_train_ratio * val_length)
+        small_val_set, _ = torch.utils.data.random_split(train_dataset, [small_val_length, val_length - small_val_length])
+        val_loader = torch.utils.data.DataLoader(
+            small_val_set, batch_size=256, shuffle=False,
+            num_workers=8, pin_memory=True)
+    else:
+        val_loader = torch.utils.data.DataLoader(
+            val_dataset, batch_size=256, shuffle=False,
+            num_workers=8, pin_memory=True)
 
     return train_loader, val_loader
 

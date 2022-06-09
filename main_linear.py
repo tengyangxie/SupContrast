@@ -63,6 +63,8 @@ def parse_option():
 
     parser.add_argument('--small_train_ratio', type=float, default=0.1,
                         help='how much of training data to use')
+    parser.add_argument('--small_val_ratio', type=float, default=0.1,
+                        help='how much of validation data to use')
 
     opt = parser.parse_args()
 
