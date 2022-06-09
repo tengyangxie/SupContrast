@@ -77,6 +77,9 @@ def parse_option():
     parser.add_argument('--trial', type=str, default='0',
                         help='id for recording multiple runs')
 
+    parser.add_argument('--small_train_ratio', type=float, default=0.1,
+                        help='how much of training data to use')
+
     opt = parser.parse_args()
 
     # check if dataset is path that passed required arguments
@@ -169,9 +172,19 @@ def set_loader(opt):
         raise ValueError(opt.dataset)
 
     train_sampler = None
-    train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=opt.batch_size, shuffle=(train_sampler is None),
-        num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
+
+    if opt.small_train_ratio > 0 and opt.small_train_ratio < 1:
+        train_length = len(train_dataset)
+        small_train_length = int(opt.small_train_ratio * train_length)
+        small_train_set, _ = torch.utils.data.random_split(train_dataset, [small_train_length, train_length - small_train_length])
+
+        train_loader = torch.utils.data.DataLoader(
+            small_train_set, batch_size=opt.batch_size, shuffle=(train_sampler is None),
+            num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
+    else:
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, batch_size=opt.batch_size, shuffle=(train_sampler is None),
+            num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
 
     return train_loader
 
