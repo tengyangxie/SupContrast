@@ -150,8 +150,9 @@ def set_loader(opt):
         raise ValueError(opt.dataset)
 
     train_sampler = None
+    train_length = int(0.1 * len(train_dataset))
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=opt.batch_size, shuffle=(train_sampler is None),
+        train_dataset[:train_length], batch_size=opt.batch_size, shuffle=(train_sampler is None),
         num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
     val_loader = torch.utils.data.DataLoader(
         val_dataset, batch_size=256, shuffle=False,
