@@ -16,11 +16,14 @@ from util import adjust_learning_rate, warmup_learning_rate, accuracy
 from util import set_optimizer, save_model
 from networks.resnet_big import SupCEResNet
 
-try:
-    import apex
-    from apex import amp, optimizers
-except ImportError:
-    pass
+import apex
+from apex import amp, optimizers
+
+# try:
+#     import apex
+#     from apex import amp, optimizers
+# except ImportError:
+#     pass
 
 
 def parse_option():
