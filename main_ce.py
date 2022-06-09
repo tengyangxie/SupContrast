@@ -175,11 +175,11 @@ def set_loader(opt):
         small_val_set, _ = torch.utils.data.random_split(val_dataset, [small_val_length, val_length - small_val_length])
         val_loader = torch.utils.data.DataLoader(
             small_val_set, batch_size=256, shuffle=False,
-            num_workers=8, pin_memory=True)
+            num_workers=opt.num_workers, pin_memory=True)
     else:
         val_loader = torch.utils.data.DataLoader(
             val_dataset, batch_size=256, shuffle=False,
-            num_workers=8, pin_memory=True)
+            num_workers=opt.num_workers, pin_memory=True)
 
     return train_loader, val_loader
 
