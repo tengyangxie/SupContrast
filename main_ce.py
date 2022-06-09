@@ -134,15 +134,15 @@ def set_loader(opt):
 
     if opt.dataset == 'cifar10':
         train_dataset = datasets.CIFAR10(root=opt.data_folder,
-                                         transform=train_transform,
-                                         download=True)
+                                        transform=train_transform,
+                                        download=True)
         val_dataset = datasets.CIFAR10(root=opt.data_folder,
-                                       train=False,
-                                       transform=val_transform)
+                                        train=False,
+                                        transform=val_transform)
     elif opt.dataset == 'cifar100':
         train_dataset = datasets.CIFAR100(root=opt.data_folder,
-                                          transform=train_transform,
-                                          download=True)
+                                            transform=train_transform,
+                                            download=True)
         val_dataset = datasets.CIFAR100(root=opt.data_folder,
                                         train=False,
                                         transform=val_transform)
@@ -150,9 +150,12 @@ def set_loader(opt):
         raise ValueError(opt.dataset)
 
     train_sampler = None
+
     train_length = int(0.1 * len(train_dataset))
+    small_train_set, _ = torch.utils.data.random_split(train_dataset, [int(0.1 * train_length), int(0.9 * train_length)])
+
     train_loader = torch.utils.data.DataLoader(
-        train_dataset[:train_length], batch_size=opt.batch_size, shuffle=(train_sampler is None),
+        small_train_set, batch_size=opt.batch_size, shuffle=(train_sampler is None),
         num_workers=opt.num_workers, pin_memory=True, sampler=train_sampler)
     val_loader = torch.utils.data.DataLoader(
         val_dataset, batch_size=256, shuffle=False,
