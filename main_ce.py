@@ -151,8 +151,8 @@ def set_loader(opt):
 
     train_sampler = None
 
-    train_length = int(0.1 * len(train_dataset))
-    small_train_set, _ = torch.utils.data.random_split(train_dataset, [int(0.1 * train_length), int(0.9 * train_length)])
+    train_length = len(train_dataset)
+    small_train_set, _ = torch.utils.data.random_split(train_dataset, [int(0.1 * train_length), train_length - int(0.9 * train_length)])
 
     train_loader = torch.utils.data.DataLoader(
         small_train_set, batch_size=opt.batch_size, shuffle=(train_sampler is None),
